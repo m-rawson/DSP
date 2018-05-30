@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import sys
 
 class wave:
-    #The actual wave and properties
+    #The actual wave and properties object
     
-    def __init__(self, amp=1, freq_hz=10, phase_rad=0, len_str = 'time_s', len_data = 1, fs_hz = 0, base_wave = None):
+    def __init__(self, amp=1, freq_hz=10, phase_rad=0, len_str = 'time_s', len_data = 1, fs_hz = 100):
         #need time, period, or total_samples and fs (which defaults to 4xfreq)
                 
         #base properties
@@ -18,10 +18,7 @@ class wave:
         self.peak_to_peak = 2*self.amp
 
         #waveform properties
-        if (fs_hz > 0):
-            self.fs_hz = fs_hz
-        else: 
-            self.fs_hz = 4*self.freq_hz #assign fs
+        self.fs_hz = fs_hz
             
         if(len_str == "time_s"):
             self.time_s = len_data
@@ -35,14 +32,14 @@ class wave:
 
         elif(len_str == "total_samples"):
             self.total_samples = len_data
-            self.time_s = 1/self.fs_hz
+            self.time_s = self.total_samples/self.fs_hz
             self.num_periods = self.time_s*self.freq_hz #calc periods within time given
         else:
             print("invalid len_str")
             sys.exit(0)
         
         #calculated properties
-        self.period = 1/freq_hz
+        self.period_s = 1/freq_hz
         self.sample_within_period = int(self.fs_hz/self.freq_hz)
                 
         #create the actual wave
@@ -62,6 +59,7 @@ class wave:
     def print_members(self):
         print("amp:", self.amp)
         print("freq_hz: ", self.freq_hz)
+        print("period_s: ", self.period_s)
         print("phase_rad: ", self.phase_rad)
         print("peak_to_peak: ", self.peak_to_peak)
         print("fs_hz: ", self.fs_hz)
@@ -70,8 +68,7 @@ class wave:
         print("total_samples: ", self.total_samples)
         print("samples_within_period: ", self.sample_within_period)
         self.plot()
-        
-#%%
+   
 class time_domain_wave_combiner:
     def __init__(self, wave_arr = None):
         #wave_arr is an list of wave objects to be combined into one
@@ -88,6 +85,7 @@ class time_domain_wave_combiner:
         #waves need to be the same length in time domain
         for i in np.arange(1,len(self.wave_arr),1):
             if(self.wave_arr[0].time_s != self.wave_arr[i].time_s or self.wave_arr[0].total_samples != self.wave_arr[i].total_samples):
+                print("**********************************************")
                 print("wave_arr[0] and wave_arr[",i,"] aren't the same size")
                 print("wave_arr[0]:")
                 self.wave_arr[0].print_members()
@@ -102,14 +100,18 @@ class time_domain_wave_combiner:
     def plot(self, total_samples=0):
         if total_samples<=0: 
             total_samples=self.total_samples 
-        plt.plot(self.t_axis[0:total_samples], self.wave_vec[0:total_samples])
-        plt.plot(self.t_axis[0:total_samples], self.wave_vec[0:total_samples], 'o')
+        plt.plot(self.t_axis[0:total_samples], self.comb_wave[0:total_samples])
+        plt.plot(self.t_axis[0:total_samples], self.comb_wave[0:total_samples], 'o')
         plt.show()
 
-#%%
-cos = wave(phase_rad = np.pi/2, fs_hz = 100)
-sin = wave(fs_hz = 100)
-cos.print_members()
-sin.print_members()
-cos_plus_sin = wave(phase_rad = np.pi/2, fs_hz=100, base_wave = sin)
-cos_plus_sin.print_members()
+class time_domain_wave_analyzer:
+    def __init__(self, wave_vec):
+        self.wave_vec = wave_vec
+        self.find_amp()
+        
+        
+    def find_amp(self):
+        self.max = max(self.wave_vec)
+        self.min = min(self.wave_vec)
+        self.vpp = max(self.wave_vec) - min(self.wave_vec)
+        self.amp = vpp/2
