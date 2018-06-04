@@ -6,7 +6,12 @@ import matplotlib.pyplot as plt
 import sys
 
 class wave:
-    #The actual wave and properties object
+    '''
+    The actual wave and properties object
+    Notes on Args:
+        len_str valid values are 'time_s', 'num_periods', 'total_samples'            
+        len_data is the value of the len_str chosen
+    '''
     
     def __init__(self, amp=1, freq_hz=10, phase_rad=0, len_str = 'time_s', len_data = 1, fs_hz = 100):
         #need time, period, or total_samples and fs (which defaults to 4xfreq)
