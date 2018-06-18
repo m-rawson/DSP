@@ -34,7 +34,7 @@ class time_domain_wave_combiner:
         self.t_axis = np.arange(0,self.total_samples)
 
         
-    def plot(self, total_samples=0):
+    def print_members(self, total_samples=0):
         if total_samples<=0: 
             total_samples=self.total_samples 
         plt.plot(self.t_axis[0:total_samples], self.wave_vec[0:total_samples])

@@ -8,7 +8,7 @@ import sys
 
 class time_series_fir_filter:
     
-    def __init__(self, wave_obj:wave=None, wave_vec=None, coef=None, taps=None, zeropad=None):
+    def __init__(self, wave_obj:wave=None, wave_vec=None, coef_vec=None, taps=None, zeropad=None):
         
         #sanity check for input
         if not wave_obj and not wave_vec:
@@ -23,24 +23,24 @@ class time_series_fir_filter:
             self.wave_vec = wave_vec
         
         #input coef
-        self.coef = coef
-        self.taps = taps            
-
+        self.coef_vec = coef_vec
+        self.taps = taps
 
 
     def compute(self):
-        if not self.wave_vec or not self.coef or self.taps <= 0 or len(taps) != len(coef):
+        if not self.wave_vec or not self.coef_vec or self.taps <= 0 or len(self.taps) != len(self.coef_vec):
             print("input data error")
-            self.data
+            self.plot()
             sys.exit(0)
         
         self.filt = np.dot(self.wave_vec, self.coef)
-        
+
+
     def quick_filt_setup(self, quick_filt='Avg'):
         if quick_filt == 'Avg':
                 self.taps = len(self.wave_vec)
                 self.coef = np.ones([1,self.taps]) * 1/np.sum(self.wave_vec)     
 
-    def data(self):
+
+    def print_members(self):
         print(self)
-        

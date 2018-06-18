@@ -6,3 +6,13 @@ The goal of this project is to make a tool which can generate and analyze signal
 
 Please feel free to email me with comments or ideas for improvement.
 mason AT rawson DOT cc
+
+
+Notes:
+Print member methods print members but names in the print statement are capitalized unlike the actual member
+
+TODO:
+Create noise object to be able to create noise objects
+
+Specific DSP References used
+- dbm: http://www.rfcafe.com/references/electrical/pwr2volts.htm
